@@ -122,7 +122,7 @@ export const RobotFace = ({ emotion, isListening, isTalking }: RobotFaceProps) =
     return () => clearTimeout(timer);
   }, [activeEmotion, isTalking, isListening, emotion, lastDirection]);
 
-  // Fluid Talk Animation - Multi-layered sine for natural speech feel
+  // fluid Talk Animation
   useEffect(() => {
     if (!isTalking) {
       setTalkPulse(0);
@@ -139,8 +139,6 @@ export const RobotFace = ({ emotion, isListening, isTalking }: RobotFaceProps) =
     frame = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frame);
   }, [isTalking]);
-
-  const purpleGlow = "#4c1d95"; // Solid Dark Purple
 
   // Eye Expression Paths - Rounded, organic shapes (Wider)
   const getEyeExpression = (side: 'left' | 'right', state: Emotion) => {
@@ -199,8 +197,25 @@ export const RobotFace = ({ emotion, isListening, isTalking }: RobotFaceProps) =
     }
   };
 
+  // Colors based on the provided image
+  const vibrancePurple = "#a855f7"; // Vibrant Violet
+  const accentWhite = "#ffffff";    // White highlight
+
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-black overflow-hidden select-none">
+      <svg style={{ visibility: 'hidden', position: 'absolute' }}>
+        <defs>
+          <radialGradient id="orbGradient" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stopColor={accentWhite} stopOpacity="0.95" />
+            <stop offset="45%" stopColor={accentWhite} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={vibrancePurple} />
+          </radialGradient>
+          <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+      </svg>
       {/* Upper 60% - Eyes Area */}
       <motion.div 
         className="w-full h-[60%] flex items-center justify-center space-x-[1.5vw]"
@@ -244,16 +259,21 @@ export const RobotFace = ({ emotion, isListening, isTalking }: RobotFaceProps) =
             }}
           >
             <svg viewBox="-40 -20 180 150" className="w-full h-full overflow-visible">
+              <filter id={`glow-${side}`}>
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
               <motion.path
                 animate={{ d: getEyeExpression(side as any, activeEmotion) }}
                 transition={{ 
                   duration: blink ? 0.12 : 0.6, // Snappier blink transition to avoid glitches
                   ease: "easeInOut" 
                 }}
-                fill={purpleGlow}
-                stroke={purpleGlow}
-                strokeWidth="1"
+                fill="url(#orbGradient)"
+                stroke="transparent"
+                strokeWidth="0"
                 strokeLinecap="round"
+                style={{ filter: `url(#glow-${side})` }}
               />
             </svg>
           </motion.div>
@@ -279,10 +299,11 @@ export const RobotFace = ({ emotion, isListening, isTalking }: RobotFaceProps) =
                 duration: isTalking ? 0.08 : 0.6, // Smoother idle mouth transitions
                 ease: isTalking ? "linear" : "easeInOut" 
               }}
-              fill={purpleGlow}
-              stroke={purpleGlow}
-              strokeWidth="1"
+              fill="url(#orbGradient)"
+              stroke="transparent"
+              strokeWidth="0"
               strokeLinecap="round"
+              style={{ filter: 'drop-shadow(0 0 10px rgba(168, 85, 247, 0.4))' }}
             />
           </svg>
         </div>
@@ -290,10 +311,10 @@ export const RobotFace = ({ emotion, isListening, isTalking }: RobotFaceProps) =
 
       {/* Subtle Digital Depth */}
       <motion.div 
-        className="absolute inset-0 pointer-events-none opacity-[0.1]"
-        animate={{ opacity: [0.05, 0.1, 0.05] }}
+        className="absolute inset-0 pointer-events-none opacity-[0.2]"
+        animate={{ opacity: [0.1, 0.2, 0.1] }}
         transition={{ duration: 4, repeat: Infinity }}
-        style={{ background: `radial-gradient(circle at center, ${purpleGlow}22 0%, transparent 80%)` }}
+        style={{ background: `radial-gradient(circle at center, ${vibrancePurple}33 0%, transparent 80%)` }}
       />
     </div>
   );
