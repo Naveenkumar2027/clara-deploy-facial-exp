@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sky-500: #0ea5e9;
+  --color-sky-400: #38bdf8;
+  --color-purple-400: #c084fc;
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+body {
+  background-color: #050505;
+  margin: 0;
+  overflow: hidden;
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(var(--tw-gradient-from), var(--tw-gradient-to));
+}

@@ -1,0 +1,6 @@
+{
+  "name": "CLARA AI",
+  "description": "A futuristic 16:9 expressive robotic face system for an AI assistant named CLARA.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["AI Emotional Support", "Voice Interaction", "Advanced Facial Animation"]
+}
